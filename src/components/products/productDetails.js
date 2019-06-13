@@ -15,7 +15,7 @@ var ProductDetails = React.createClass({
 
     render: function () {
         return (
-            <div className="container">
+            <div className="">
                 <div>
                     <a href="#" className="btn btn-primary" onClick={this._hideShoppingCart}>GO BACK</a>
                 </div>

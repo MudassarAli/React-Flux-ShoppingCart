@@ -15,8 +15,8 @@ var Product = React.createClass({
 
     render: function () {
         return (
-            <div className="col">
-                <img src={this.props.item.imageurl} alt="" />
+            <div className="col-md-4">
+                <img width="150px" src={this.props.item.imageurl} alt="" />
 
                 <h5 className="">{this.props.item.name}</h5>
                 <p className=""><span> Description: </span> {this.props.item.description}</p>
@@ -29,8 +29,9 @@ var Product = React.createClass({
                     <a href="#" className="btn btn-danger disabled">Sold out</a> :
                     <a href="#" className="btn btn-success" onClick={this._buyProduct}>Buy</a>
                 }
-
+                <br></br><br></br>
             </div>
+            
         );
     }
 
