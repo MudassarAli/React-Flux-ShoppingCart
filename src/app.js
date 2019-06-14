@@ -99,14 +99,14 @@ var App = React.createClass({
     }
 
     return (
-      <div>
+      <div className="container">
         <nav className="navbar navbar-light bg-light">
           <a className="navbar-brand" href="/">
-            <span className="fas fa-shopping-cart">Nettbutikk</span>
+            <span>Contoso shopping center</span>
           </a>
 
           <a href="#" className="btn btn-info btn-lg" onClick={this._showShoppingCart}>
-            <span className="fas fa-shopping-cart"></span> {this.state.soldProducts.length}
+            <span className="glyphicon glyphicon-shopping-cart"></span> {this.state.soldProducts.length}
           </a>
         </nav>
 

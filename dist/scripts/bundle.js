@@ -34897,14 +34897,14 @@ var App = React.createClass({displayName: "App",
     }
 
     return (
-      React.createElement("div", null, 
+      React.createElement("div", {className: "container"}, 
         React.createElement("nav", {className: "navbar navbar-light bg-light"}, 
           React.createElement("a", {className: "navbar-brand", href: "/"}, 
-            React.createElement("span", {className: "fas fa-shopping-cart"}, "Nettbutikk")
+            React.createElement("span", null, "Contoso shopping center")
           ), 
 
           React.createElement("a", {href: "#", className: "btn btn-info btn-lg", onClick: this._showShoppingCart}, 
-            React.createElement("span", {className: "fas fa-shopping-cart"}), " ", this.state.soldProducts.length
+            React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}), " ", this.state.soldProducts.length
           )
         ), 
 
@@ -35049,7 +35049,7 @@ var Search = React.createClass({displayName: "Search",
             React.createElement("div", {className: "container"}, 
                 React.createElement("br", null), 
                 React.createElement("div", {className: "row justify-content-center"}, 
-                    React.createElement("div", {className: "col-12 col-md-10 col-lg-8"}, 
+                    React.createElement("div", {className: "col-lg-12"}, 
                         React.createElement("form", {className: "card card-sm"}, 
                             React.createElement("div", {className: "card-body row no-gutters align-items-center"}, 
                                 React.createElement("div", {className: "col-auto"}, 

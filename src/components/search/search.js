@@ -18,7 +18,7 @@ var Search = React.createClass({
             <div className="container">
                 <br />
                 <div className="row justify-content-center">
-                    <div className="col-12 col-md-10 col-lg-8">
+                    <div className="col-lg-12">
                         <form className="card card-sm">
                             <div className="card-body row no-gutters align-items-center">
                                 <div className="col-auto">
