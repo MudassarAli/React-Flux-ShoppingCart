@@ -35097,29 +35097,36 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
     render: function () {
         var TotalAmount = 0;
         var GrandTotal = 0;
+        var astyle = {
+            width: "72px",
+            height: "72px"    
+        };       
+
         var items = this.props.soldproducts.map((item, index) => {
-            TotalAmount = TotalAmount + item.price;
-            GrandTotal = (GrandTotal + TotalAmount) * 0.035
+            TotalAmount = +TotalAmount + +item.price;
+            GrandTotal = (+GrandTotal + +TotalAmount)
 
             return (
                 React.createElement("tr", null, 
                     React.createElement("td", {className: "col-sm-8 col-md-6"}, 
                         React.createElement("div", {className: "media"}, 
-                            React.createElement("div", {className: "col-sm-2 hidden-xs"}, React.createElement("img", {src: item.imageurl, alt: "...", className: "img-responsive"})), 
-                            React.createElement("div", {className: "col-sm-10"}, 
-                                React.createElement("h4", {className: "nomargin"}, item.name), 
-                                React.createElement("p", null, item.description)
+                            React.createElement("a", {className: "thumbnail pull-left", href: "#"}, " ", React.createElement("img", {className: "media-object", src: item.imageurl, style: astyle})), 
+                            React.createElement("div", {className: "media-body"}, 
+                                React.createElement("h4", {className: "media-heading"}, React.createElement("a", {href: "#"}, item.name)), 
+                                React.createElement("p", null, item.description, " "), 
+                                React.createElement("span", null, "Status: "), React.createElement("span", {className: "text-success"}, React.createElement("strong", null, "In Stock"))
                             )
                         )
                     ), 
-                    React.createElement("td", {"data-th": "Price"}, item.price), 
-                    React.createElement("td", {"data-th": "Quantity"}, 
-                        React.createElement("input", {type: "number", className: "form-control text-center", value: "1"})
+                    React.createElement("td", {className: "col-sm-1 col-md-1"}, 
+                        React.createElement("input", {type: "text", className: "form-control", id: "exampleInputEmail1", value: "1", value: "1", min: "1"})
                     ), 
-                    React.createElement("td", {"data-th": "Subtotal", class: "text-center"}, "1.99"), 
-                    React.createElement("td", {className: "actions", "data-th": ""}, 
-                        React.createElement("button", {className: "btn btn-info btn-sm"}, React.createElement("i", {className: "fa fa-refresh"})), 
-                        React.createElement("button", {className: "btn btn-danger btn-sm", onClick: () => this._removeProduct(item, index, event)}, React.createElement("i", {class: "fa fa-trash-o"}))
+                    React.createElement("td", {className: "col-sm-1 col-md-1 text-center"}, React.createElement("strong", null, item.price)), 
+                    React.createElement("td", {className: "col-sm-1 col-md-1 text-center"}, React.createElement("strong", null, item.price)), 
+                    React.createElement("td", {className: "col-sm-1 col-md-1"}, 
+                        React.createElement("button", {type: "button", className: "btn btn-danger", onClick: () => this._removeProduct(item, index, event)}, 
+                            React.createElement("span", {className: "glyphicon glyphicon-remove"}), "Remove"
+                        )
                     )
                 )
             );
@@ -35130,39 +35137,67 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
                 React.createElement("div", null, 
                     React.createElement("a", {href: "#", className: "btn btn-primary", onClick: this._hideShoppingCart}, "GO BACK")
                 ), 
-                React.createElement("div", {class: "row"}, 
-                    React.createElement("div", {class: "col-sm-12 col-md-10 col-md-offset-1"}, 
-                        React.createElement("table", {class: "table table-hover"}, 
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "col-sm-12 col-md-10 col-md-offset-1"}, 
+                        React.createElement("table", {className: "table table-hover"}, 
                             React.createElement("thead", null, 
                                 React.createElement("tr", null, 
                                     React.createElement("th", null, "Product"), 
                                     React.createElement("th", null, "Quantity"), 
-                                    React.createElement("th", {class: "text-center"}, "Price"), 
-                                    React.createElement("th", {class: "text-center"}, "Total"), 
+                                    React.createElement("th", {className: "text-center"}, "Price"), 
+                                    React.createElement("th", {className: "text-center"}, "Total"), 
                                     React.createElement("th", null)
                                 )
                             ), 
                             React.createElement("tbody", null, 
-                                items
-                            ), 
-                            React.createElement("tfoot", null, 
-                                React.createElement("tr", {className: "visible-xs"}, 
-                                    React.createElement("td", {className: "text-center"}, React.createElement("strong", null, "Total 1.99"))
+                                items, 
+
+                                React.createElement("tr", null, 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, React.createElement("h5", null, "Subtotal")), 
+                                    React.createElement("td", {className: "text-right"}, React.createElement("h5", null, React.createElement("strong", null, "$", GrandTotal)))
                                 ), 
                                 React.createElement("tr", null, 
-                                    React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-warning"}, React.createElement("i", {class: "fa fa-angle-left"}), " Continue Shopping")), 
-                                    React.createElement("td", {colspan: "2", className: "hidden-xs"}), 
-                                    React.createElement("td", {className: "hidden-xs text-center"}, React.createElement("strong", null, "Total $1.99")), 
-                                    React.createElement("td", null, React.createElement("a", {href: "#", className: "btn btn-success btn-block"}, "Checkout ", React.createElement("i", {class: "fa fa-angle-right"})))
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, React.createElement("h5", null, "Estimated shipping")), 
+                                    React.createElement("td", {className: "text-right"}, React.createElement("h5", null, React.createElement("strong", null, "$6")))
+                                ), 
+                                React.createElement("tr", null, 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, 
+                                        React.createElement("h3", null, "Total")
+                                    ), 
+                                    React.createElement("td", {className: "text-right"}, React.createElement("h3", null, React.createElement("strong", null, "$", GrandTotal * 6)))
+                                ), 
+                                React.createElement("tr", null, 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, "   "), 
+                                    React.createElement("td", null, 
+                                        React.createElement("button", {type: "button", className: "btn btn-default"}, 
+                                            React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}), " Continue Shopping"
+                                        )
+                                    ), 
+                                    React.createElement("td", null, 
+                                        React.createElement("button", {type: "button", className: "btn btn-success"}, 
+                                            "Checkout ", React.createElement("span", {className: "glyphicon glyphicon-play"})
+                                        )
+                                    )
                                 )
                             )
+
                         )
                     )
                 )
             )
         )
     }
-
 });
 
 module.exports = ShoppingCart;
