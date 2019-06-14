@@ -1,10 +1,10 @@
 'use strict';
 var React = require('react');
-var ShoppingCart = require("./components/shoppingcart/shoppingCart");
-var ProductList = require("./components/products/productlist");
-var ProductDetails = require("./components/products/productDetails");
-var Search = require("./components/search/search");
-var ProductApi = require("./api/productsApi");
+var ShoppingCart = require("./shoppingcart/shoppingCart");
+var ProductList = require("./products/productlist");
+var ProductDetails = require("./products/productDetails");
+var Search = require("./search/search");
+var ProductApi = require("../api/productsApi");
 
 var App = React.createClass({
 
@@ -99,14 +99,14 @@ var App = React.createClass({
     }
 
     return (
-      <div>
+      <div className="container">
         <nav className="navbar navbar-light bg-light">
           <a className="navbar-brand" href="/">
-            <span className="fas fa-shopping-cart">Nettbutikk</span>
+            <span>Contoso shopping store</span>
           </a>
 
           <a href="#" className="btn btn-info btn-lg" onClick={this._showShoppingCart}>
-            <span className="fas fa-shopping-cart"></span> {this.state.soldProducts.length}
+            <span className="glyphicon glyphicon-shopping-cart"></span> {this.state.soldProducts.length}
           </a>
         </nav>
 
