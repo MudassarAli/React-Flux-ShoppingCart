@@ -19,26 +19,26 @@ var ProductApi = {
     },
 
     getProductById: function (id) {
-        var author = _.find(products, { id: id });
-        return _clone(author);
+        var product = _.find(products, { id: id });
+        return _clone(product);
     },
 
-    saveProduct: function (author) {
+    saveProduct: function (product) {
         //pretend an ajax call to web api is made here
         console.log("Pretend this just saved the author to the DB via AJAX call...");
 
-        if (author.id) {
-            var existingAuthorIndex = _.indexOf(products, _.find(products, { id: author.id }));
-            products.splice(existingAuthorIndex, 1, author);
+        if (product.id) {
+            var existingAuthorIndex = _.indexOf(products, _.find(products, { id: product.id }));
+            products.splice(existingAuthorIndex, 1, product);
         } else {
             //Just simulating creation here.
             //The server would generate ids for new authors in a real app.
             //Cloning so copy returned is passed by value rather than by reference.
-            author.id = _generateId(author);
-            products.push(author);
+            product.id = _generateId(product);
+            products.push(product);
         }
 
-        return _clone(author);
+        return _clone(product);
     },
 
     deleteAuthor: function (id) {

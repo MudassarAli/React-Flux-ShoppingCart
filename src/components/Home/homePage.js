@@ -5,7 +5,9 @@ var HomePage = React.createClass({
 
     render: function () {
         return (
-            <p> Welcome to home poge</p>
+            <div className="container">
+                <p> Welcome to home poge</p>
+            </div>
         );
     }
 

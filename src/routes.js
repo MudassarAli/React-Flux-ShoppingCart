@@ -11,9 +11,10 @@ var Redirect = Router.Redirect;
 var routes = (
   <Route name="app" path="/" handler={require('./components/app')}>
     <DefaultRoute handler={require('./components/Home/homePage')} />
-    <Route name="products" handler={require('./components/products/productlist')} />
-    <Route name="about" handler={require('./components/about/aboutPage')} />
-    
+    <Route name="productslist" handler={require('./components/products/productsList')} />
+    <Route name="about" handler={require('./components/about/aboutPage')} />     
+    <Route name ="shoppingcart" handler={require('./components/shoppingcart/shoppingCart')}/> 
+    <Route name ="productdetails" path="/product/:id" handler={require('./components/products/productDetails')}/>
   </Route>
 );
 

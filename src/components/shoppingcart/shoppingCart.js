@@ -1,5 +1,9 @@
 'use strict';
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+var toastr = require('toastr');
+var swal = require('sweetalert');
 
 var ShoppingCart = React.createClass({
 
@@ -9,15 +13,39 @@ var ShoppingCart = React.createClass({
         }
     },
 
+    componentDidMount: function () {
+        var _soldProducts = JSON.parse(localStorage.getItem("soldproducts"));
+        this.setState({ productsInShoppingcart: _soldProducts });
+    },
+
     _hideShoppingCart: function (e) {
         e.preventDefault();
         this.props.hideShoppingCart();
-        this._removeProduct = this._removeProduct.bind(this);
     },
 
-    _removeProduct: function (item, index, e) {
-        e.preventDefault();
-        this.props.removeproduct(item, index);
+    _removeProduct: function (product, itemIndex) {
+
+        swal({
+            title: "Are you sure?",
+            text: "Sure you want to remove product?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal("Product removed!", {icon: "success",});            
+
+              var soldproducts = this.state.productsInShoppingcart;
+              soldproducts.splice(itemIndex, 1);
+              this.setState({ soldProducts: soldproducts });
+
+              localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
+
+            } else {
+                swal("Product not removed!");
+            }
+          });
     },
 
     render: function () {
@@ -25,10 +53,10 @@ var ShoppingCart = React.createClass({
         var GrandTotal = 0;
         var astyle = {
             width: "72px",
-            height: "72px"    
-        };       
+            height: "72px"
+        };
 
-        var items = this.props.soldproducts.map((item, index) => {
+        var items = this.state.productsInShoppingcart.map((item, index) => {
             TotalAmount = +TotalAmount + +item.price;
             GrandTotal = (+GrandTotal + +TotalAmount)
 
@@ -36,7 +64,7 @@ var ShoppingCart = React.createClass({
                 <tr>
                     <td className="col-sm-8 col-md-6">
                         <div className="media">
-                            <a className="thumbnail pull-left" href="#"> <img className="media-object" src={item.imageurl} style={astyle}/></a>
+                            <a className="thumbnail pull-left" href="#"> <img className="media-object" src={item.imageurl} style={astyle} /></a>
                             <div className="media-body">
                                 <h4 className="media-heading"><a href="#">{item.name}</a></h4>
                                 <p>{item.description} </p>
@@ -59,10 +87,7 @@ var ShoppingCart = React.createClass({
         });
 
         return (
-            <div class="container">
-                <div>
-                    <a href="#" className="btn btn-primary" onClick={this._hideShoppingCart}>GO BACK</a>
-                </div>
+            <div className="container">
                 <div className="row">
                     <div className="col-sm-12 col-md-10 col-md-offset-1">
                         <table className="table table-hover">
@@ -106,9 +131,9 @@ var ShoppingCart = React.createClass({
                                     <td>   </td>
                                     <td>   </td>
                                     <td>
-                                        <button type="button" className="btn btn-default">
+                                        <Link to="productslist" className="btn btn-default">
                                             <span className="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
-                                        </button>
+                                        </Link>
                                     </td>
                                     <td>
                                         <button type="button" className="btn btn-success">

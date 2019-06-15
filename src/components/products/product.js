@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
 
 var Product = React.createClass({
 
@@ -23,11 +25,16 @@ var Product = React.createClass({
                 <p className=""><span> Price: </span> ${this.props.item.price}</p>
                 <p className=""><span> Total: </span> {this.props.item.total}</p>
 
-                <a href="#" className="btn btn-primary" onClick={this._selectedProduct} >ViewDetails</a>
+                <Link to={`/product/${this.props.item.id}`} className="btn btn-primary">
+                         <span>View details</span>
+                </Link>               
 
                 {this.props.item.total === 0 ?
-                    <a href="#" className="btn btn-danger disabled">Sold out</a> :
-                    <a href="#" className="btn btn-success" onClick={this._buyProduct}>Buy</a>
+                    <Link to="app" className="btn btn-danger disabled">
+                         <span>Sold Out</span>
+                    </Link>
+                    :
+                    <a className="btn btn-success" onClick={this._buyProduct}>Buy</a>
                 }
                 <br></br><br></br>
             </div>
