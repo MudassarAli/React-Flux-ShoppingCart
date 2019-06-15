@@ -38258,13 +38258,36 @@ module.exports = {
 },{}],205:[function(require,module,exports){
 'use strict';
 var React = require('react');
+var ProductApi = require("../../api/productsApi");
 
 var HomePage = React.createClass({displayName: "HomePage",
+
+    getInitialState: function () {
+        return {
+            item: "",
+        };
+    },
+
+    componentWillMount: function () {
+        var _products = ProductApi.getAllProducts();
+        var rand = _products[Math.floor(Math.random() * _products.length)];
+
+        this.setState({
+            item: rand
+        });
+
+    },
 
     render: function () {
         return (
             React.createElement("div", {className: "container"}, 
-                React.createElement("p", null, " Welcome to home poge")
+                React.createElement("div", {className: "col-lg-12 text-center"}, 
+                    React.createElement("img", {width: "300px", src: this.state.item.imageurl, alt: ""}), 
+
+                    React.createElement("h5", {className: ""}, this.state.item.name), 
+                    React.createElement("p", {className: ""}, React.createElement("span", null, " Description: "), " ", this.state.item.description), 
+                    React.createElement("p", {className: ""}, React.createElement("span", null, " Price: "), " $", this.state.item.price)
+                )
             )
         );
     }
@@ -38273,7 +38296,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"react":200}],206:[function(require,module,exports){
+},{"../../api/productsApi":203,"react":200}],206:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
