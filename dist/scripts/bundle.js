@@ -38334,13 +38334,18 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var Header = React.createClass({displayName: "Header",
+ 
   render: function () {
+    var styles= {
+      height:"30px",
+      width:"70px"
+    }
     return (
       React.createElement("div", {className: "container"}, 
         React.createElement("nav", {className: "navbar navbar-default"}, 
           React.createElement("div", {className: "container-fluid"}, 
             React.createElement(Link, {to: "app", className: "navbar-brand"}, 
-              React.createElement("img", {src: "images/Contoso_logo.png"})
+              React.createElement("img", {style: styles, src: "images/Contoso_logo.png"})
             ), 
             React.createElement("ul", {className: "nav navbar-nav"}, 
               React.createElement("li", null, React.createElement(Link, {to: "app"}, "Home")), 
@@ -38630,21 +38635,21 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
             icon: "warning",
             buttons: true,
             dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              swal("Product removed!", {icon: "success",});            
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Product removed!", { icon: "success", });
 
-              var soldproducts = this.state.productsInShoppingcart;
-              soldproducts.splice(itemIndex, 1);
-              this.setState({ soldProducts: soldproducts });
+                    var soldproducts = this.state.productsInShoppingcart;
+                    soldproducts.splice(itemIndex, 1);
+                    this.setState({ soldProducts: soldproducts });
 
-              localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
+                    localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
 
-            } else {
-                swal("Product not removed!");
-            }
-          });
+                } else {
+                    swal("Product not removed!");
+                }
+            });
     },
 
     render: function () {

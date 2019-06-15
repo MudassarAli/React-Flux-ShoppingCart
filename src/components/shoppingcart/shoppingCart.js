@@ -31,21 +31,21 @@ var ShoppingCart = React.createClass({
             icon: "warning",
             buttons: true,
             dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              swal("Product removed!", {icon: "success",});            
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Product removed!", { icon: "success", });
 
-              var soldproducts = this.state.productsInShoppingcart;
-              soldproducts.splice(itemIndex, 1);
-              this.setState({ soldProducts: soldproducts });
+                    var soldproducts = this.state.productsInShoppingcart;
+                    soldproducts.splice(itemIndex, 1);
+                    this.setState({ soldProducts: soldproducts });
 
-              localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
+                    localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
 
-            } else {
-                swal("Product not removed!");
-            }
-          });
+                } else {
+                    swal("Product not removed!");
+                }
+            });
     },
 
     render: function () {
