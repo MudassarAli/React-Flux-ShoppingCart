@@ -27,7 +27,7 @@ var Product = React.createClass({
 
                 <Link to={`/product/${this.props.item.id}`} className="btn btn-primary">
                          <span>View details</span>
-                </Link>               
+                </Link>    &nbsp;&nbsp;           
 
                 {this.props.item.total === 0 ?
                     <Link to="app" className="btn btn-danger disabled">

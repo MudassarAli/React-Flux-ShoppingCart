@@ -38390,7 +38390,7 @@ var Product = React.createClass({displayName: "Product",
 
                 React.createElement(Link, {to: `/product/${this.props.item.id}`, className: "btn btn-primary"}, 
                          React.createElement("span", null, "View details")
-                ), 
+                ), "      ",            
 
                 this.props.item.total === 0 ?
                     React.createElement(Link, {to: "app", className: "btn btn-danger disabled"}, 
