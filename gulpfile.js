@@ -65,13 +65,13 @@ gulp.task('css', function () {
 // Migrates images to dist folder
 // Note that I could even optimize my images here
 gulp.task('images', function () {
-    gulp.src('./src/images/*')
-        .pipe(gulp.dest(config.paths.dist + '/images'))
-        .pipe(connect.reload());
+	gulp.src('./src/images/*')
+		.pipe(gulp.dest(config.paths.dist + '/images'))
+		.pipe(connect.reload());
 
-    //publish favicon
-    gulp.src('./src/favicon.ico')
-        .pipe(gulp.dest(config.paths.dist));
+	//publish favicon
+	gulp.src('./src/favicon.ico')
+		.pipe(gulp.dest(config.paths.dist));
 });
 
 gulp.task('lint', function () {
@@ -85,4 +85,4 @@ gulp.task('watch', function () {
 	gulp.watch(config.paths.js, ['js', 'lint']);
 });
 
-gulp.task('default', ['html', 'js', 'css','images', 'lint', 'open', 'watch']);
+gulp.task('default', ['html', 'js', 'css', 'images', 'lint', 'open', 'watch']);

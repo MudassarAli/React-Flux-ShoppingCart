@@ -64,14 +64,17 @@ var App = React.createClass({
         var prodObject = products.find(function (obj) { return obj.name === product.name; });
         prodObject.total = prodObject.total + 1;
         this.setState({ products: products });
-    },
+    },  
 
     render: function () {
         return (
             <div className="container">
                 <div className="container" >
-                    <Link to="shoppingcart"><span className="glyphicon glyphicon-shopping-cart">
-                        {this.state.soldProducts.length}</span></Link>
+                    <Link to="shoppingcart">
+                        <span className="glyphicon glyphicon-shopping-cart">
+                            {this.state.soldProducts.length}
+                        </span>
+                    </Link>
                     <Search searchProducts={this._searchProducts} />
                     {
                         this.state.products.map((item, index) => {

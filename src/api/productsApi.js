@@ -41,7 +41,7 @@ var ProductApi = {
         return _clone(product);
     },
 
-    deleteAuthor: function (id) {
+    removeProduct: function (id) {
         console.log("Pretend this just deleted the author from the DB via an AJAX call...");
         _.remove(products, { id: id });
     }
