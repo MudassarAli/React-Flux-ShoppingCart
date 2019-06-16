@@ -4,27 +4,22 @@ var Router = require('react-router');
 var Link = Router.Link;
 var toastr = require('toastr');
 var swal = require('sweetalert');
+var ProductsStore = require("../../stores/productsStore");
 
 var ShoppingCart = React.createClass({
 
     getInitialState: function () {
         return {
-            productsInShoppingcart: []
-        }
+            _productsInShoppingCart: []
+        };
     },
 
-    componentDidMount: function () {
-        var _soldProducts = JSON.parse(localStorage.getItem("soldproducts"));
-        this.setState({ productsInShoppingcart: _soldProducts });
-    },
-
-    _hideShoppingCart: function (e) {
-        e.preventDefault();
-        this.props.hideShoppingCart();
+    componentWillMount: function () {
+        var productsInShoppingCart = ProductsStore.getProductsFromShoppingCart();
+        this.setState({ _productsInShoppingCart: productsInShoppingCart });
     },
 
     _removeProduct: function (product, itemIndex) {
-
         swal({
             title: "Are you sure?",
             text: "Sure you want to remove product?",
@@ -40,8 +35,6 @@ var ShoppingCart = React.createClass({
                     soldproducts.splice(itemIndex, 1);
                     this.setState({ soldProducts: soldproducts });
 
-                    localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
-
                 } else {
                     swal("Product not removed!");
                 }
@@ -56,7 +49,8 @@ var ShoppingCart = React.createClass({
             height: "72px"
         };
 
-        var items = this.state.productsInShoppingcart.map((item, index) => {
+        var items = this.state._productsInShoppingCart.map((item, index) => {
+            console.log(item);
             TotalAmount = +TotalAmount + +item.price;
             GrandTotal = (+GrandTotal + +TotalAmount)
 

@@ -38873,7 +38873,48 @@ var InitializeActions = {
 
 module.exports = InitializeActions;
 
-},{"../api/productsApi":209,"../constants/actionTypes":220,"../dispatcher/appDispatcher":221}],209:[function(require,module,exports){
+},{"../api/productsApi":210,"../constants/actionTypes":221,"../dispatcher/appDispatcher":222}],209:[function(require,module,exports){
+"use strict";
+
+var Dispatcher = require('../dispatcher/appDispatcher');
+var ProductsApi = require('../api/productsApi');
+var ActionTypes = require('../constants/actionTypes');
+var ProductsStore = require("../stores/productsStore");
+
+var AuthorActions = {
+    getProductsFromShoppingCart: function () {
+        Dispatcher.dispatch({
+            actionType: ActionTypes.Get_Products_From_ShoppingCart,
+            products: ProductsStore.getProductsFromShoppingCart()
+        });
+    },
+
+    addProductToShoppingCart: function (product, index) {
+        var newProduct = ProductsApi.saveProduct(product);
+
+        //Hey dispatcher, go tell all the stores that an author was just created.
+        Dispatcher.dispatch({
+            actionType: ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART,
+            addproduct: {
+                product: newProduct,
+                productindex: index
+            }
+        });
+    },
+
+    removeProductFromShoppingCart: function (id) {
+        ProductsApi.removeProduct(id);
+
+        Dispatcher.dispatch({
+            actionType: ActionTypes.Remove_Product_From_ShoppingCart,
+            id: id
+        });
+    }
+};
+
+module.exports = AuthorActions;
+
+},{"../api/productsApi":210,"../constants/actionTypes":221,"../dispatcher/appDispatcher":222,"../stores/productsStore":225}],210:[function(require,module,exports){
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
@@ -38925,7 +38966,7 @@ var ProductApi = {
 
 module.exports = ProductApi;
 
-},{"./productsData":210,"lodash":8}],210:[function(require,module,exports){
+},{"./productsData":211,"lodash":8}],211:[function(require,module,exports){
 module.exports = {
     products: [
         {
@@ -38968,7 +39009,7 @@ module.exports = {
         }
     ]
 };
-},{}],211:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ProductsStore = require('../../stores/productsStore');
@@ -39011,7 +39052,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"../../stores/productsStore":224,"react":205}],212:[function(require,module,exports){
+},{"../../stores/productsStore":225,"react":205}],213:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -39040,7 +39081,7 @@ var About = React.createClass({displayName: "About",
 
 module.exports = About;
 
-},{"react":205}],213:[function(require,module,exports){
+},{"react":205}],214:[function(require,module,exports){
 /*eslint-disable strict */ //Disabling check because we can't run strict mode. Need global vars.
 
 var React = require('react');
@@ -39063,20 +39104,42 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/header":214,"jquery":7,"react":205,"react-router":35}],214:[function(require,module,exports){
+},{"./common/header":215,"jquery":7,"react":205,"react-router":35}],215:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
+var ProductActions = require('../../actions/productsActions');
+var ProductsStore = require("../../stores/productsStore");
 
 var Header = React.createClass({displayName: "Header",
- 
+  getInitialState: function () {
+    return {
+      _productsInShoppingCart: []
+    };
+  },
+
+  componentWillMount: function () {
+    ProductsStore.addChangeListener(this._onChange);
+  },  
+
+  //Clean up when this component is unmounted
+  componentWillUnmount: function () {
+    ProductsStore.removeChangeListener(this._onChange);
+  },
+
+  _onChange: function () {
+    var productsInShoppingCart = ProductsStore.getProductsFromShoppingCart();
+    this.setState({ _productsInShoppingCart: productsInShoppingCart });
+  },
+
   render: function () {
-    var styles= {
-      height:"30px",
-      width:"70px"
+    var styles = {
+      height: "30px",
+      width: "70px"
     }
+
     return (
       React.createElement("div", {className: "container"}, 
         React.createElement("nav", {className: "navbar navbar-default"}, 
@@ -39087,7 +39150,13 @@ var Header = React.createClass({displayName: "Header",
             React.createElement("ul", {className: "nav navbar-nav"}, 
               React.createElement("li", null, React.createElement(Link, {to: "app"}, "Home")), 
               React.createElement("li", null, React.createElement(Link, {to: "productslist"}, "products")), 
-              React.createElement("li", null, React.createElement(Link, {to: "about"}, "About"))
+              React.createElement("li", null, React.createElement(Link, {to: "about"}, "About")), 
+              React.createElement("li", null, React.createElement(Link, {to: "shoppingcart"}, 
+                React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}, 
+                  this.state._productsInShoppingCart.length
+                )
+              )
+              )
             )
           )
         )
@@ -39097,7 +39166,7 @@ var Header = React.createClass({displayName: "Header",
 });
 
 module.exports = Header;
-},{"react":205,"react-router":35}],215:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../stores/productsStore":225,"react":205,"react-router":35}],216:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Router = require('react-router');
@@ -39146,7 +39215,7 @@ var Product = React.createClass({displayName: "Product",
 
 module.exports = Product;
 
-},{"react":205,"react-router":35}],216:[function(require,module,exports){
+},{"react":205,"react-router":35}],217:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ProductApi = require("../../api/productsApi");
@@ -39203,53 +39272,48 @@ var ProductDetails = React.createClass({displayName: "ProductDetails",
 
 module.exports = ProductDetails;
 
-},{"../../api/productsApi":209,"react":205,"react-router":35,"toastr":207}],217:[function(require,module,exports){
+},{"../../api/productsApi":210,"react":205,"react-router":35,"toastr":207}],218:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Search = require("../search/search");
-var Product = require("./product")
+var Product = require("./product");
 var ProductApi = require("../../api/productsApi");
 var Router = require('react-router');
 var Link = Router.Link;
 var toastr = require('toastr');
+var ProductsStore = require("../../stores/productsStore");
+var ProductsAction = require('../../actions/productsActions');
 
 var App = React.createClass({displayName: "App",
     getInitialState: function () {
         return {
             products: [],
-            soldProducts: [],
+            productsInShoppingCart: [],
             selectedProduct: ""
         };
     },
 
     componentWillMount: function () {
-        var _soldProducts = JSON.parse(localStorage.getItem("soldproducts"));
-        if (_soldProducts && _soldProducts.length > 0) {
-            this.setState({
-                soldProducts: _soldProducts
-            })
-        }
+        ProductsStore.addChangeListener(this._onChange);
     },
 
     componentDidMount: function () {
-        var _products = ProductApi.getAllProducts();
-        this.setState({ products: _products });
+        this.setState({ products: ProductsStore.getAllProducts() });
     },
 
+    //Clean up when this component is unmounted
     componentWillUnmount: function () {
-        localStorage.setItem("soldproducts", JSON.stringify(this.state.soldProducts));
+        ProductsStore.removeChangeListener(this._onChange);
     },
+
+    _onChange: function () {
+        this.setState({ products: ProductsStore.getAllProducts() });      
+    },        
 
     _buyProduct: function (index) {
-        var products = this.state.products;
-        var item = products[index];
-        item.total = item.total - 1;
-        products.splice(index, 1, item);
-        this.setState({ products: products });
-
-        var soldProducts = this.state.soldProducts;
-        soldProducts.push(item);
-        this.setState({ soldProducts: soldProducts });
+        var products = ProductsStore.getAllProducts();
+        var product = products[index];
+        ProductsAction.addProductToShoppingCart(product, index);       
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -39270,17 +39334,12 @@ var App = React.createClass({displayName: "App",
         var prodObject = products.find(function (obj) { return obj.name === product.name; });
         prodObject.total = prodObject.total + 1;
         this.setState({ products: products });
-    },  
+    },
 
     render: function () {
         return (
             React.createElement("div", {className: "container"}, 
                 React.createElement("div", {className: "container"}, 
-                    React.createElement(Link, {to: "shoppingcart"}, 
-                        React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}, 
-                            this.state.soldProducts.length
-                        )
-                    ), 
                     React.createElement(Search, {searchProducts: this._searchProducts}), 
                     
                         this.state.products.map((item, index) => {
@@ -39298,7 +39357,7 @@ var App = React.createClass({displayName: "App",
 }
 );
 module.exports = App;
-},{"../../api/productsApi":209,"../search/search":218,"./product":215,"react":205,"react-router":35,"toastr":207}],218:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../api/productsApi":210,"../../stores/productsStore":225,"../search/search":219,"./product":216,"react":205,"react-router":35,"toastr":207}],219:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -39341,34 +39400,29 @@ var Search = React.createClass({displayName: "Search",
 
 module.exports = Search;
 
-},{"react":205}],219:[function(require,module,exports){
+},{"react":205}],220:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 var toastr = require('toastr');
 var swal = require('sweetalert');
+var ProductsStore = require("../../stores/productsStore");
 
 var ShoppingCart = React.createClass({displayName: "ShoppingCart",
 
     getInitialState: function () {
         return {
-            productsInShoppingcart: []
-        }
+            _productsInShoppingCart: []
+        };
     },
 
-    componentDidMount: function () {
-        var _soldProducts = JSON.parse(localStorage.getItem("soldproducts"));
-        this.setState({ productsInShoppingcart: _soldProducts });
-    },
-
-    _hideShoppingCart: function (e) {
-        e.preventDefault();
-        this.props.hideShoppingCart();
+    componentWillMount: function () {
+        var productsInShoppingCart = ProductsStore.getProductsFromShoppingCart();
+        this.setState({ _productsInShoppingCart: productsInShoppingCart });
     },
 
     _removeProduct: function (product, itemIndex) {
-
         swal({
             title: "Are you sure?",
             text: "Sure you want to remove product?",
@@ -39384,8 +39438,6 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
                     soldproducts.splice(itemIndex, 1);
                     this.setState({ soldProducts: soldproducts });
 
-                    localStorage.setItem("soldproducts", JSON.stringify(this.state.productsInShoppingcart));
-
                 } else {
                     swal("Product not removed!");
                 }
@@ -39400,7 +39452,8 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
             height: "72px"
         };
 
-        var items = this.state.productsInShoppingcart.map((item, index) => {
+        var items = this.state._productsInShoppingCart.map((item, index) => {
+            console.log(item);
             TotalAmount = +TotalAmount + +item.price;
             GrandTotal = (+GrandTotal + +TotalAmount)
 
@@ -39497,18 +39550,19 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
 
 module.exports = ShoppingCart;
 
-},{"react":205,"react-router":35,"sweetalert":206,"toastr":207}],220:[function(require,module,exports){
+},{"../../stores/productsStore":225,"react":205,"react-router":35,"sweetalert":206,"toastr":207}],221:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
     INITIALIZE: null,
-    ADD_Product: null,
-    REMOVE_PRODUCT: null
+    GET_PRODUCTS_FROM_SHOPPINGCART: null,
+    ADD_PRODUCT_TO_SHOPPINGCART: null,
+    REMOVE_PRODUCT_FROM_SHOPPINGCART: null
 });
 
-},{"react/lib/keyMirror":190}],221:[function(require,module,exports){
+},{"react/lib/keyMirror":190}],222:[function(require,module,exports){
 /*
  * Copyright (c) 2015, Facebook, Inc.
  * All rights reserved.
@@ -39526,7 +39580,7 @@ var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":4}],222:[function(require,module,exports){
+},{"flux":4}],223:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./routes');
@@ -39536,9 +39590,9 @@ var InitializeActions = require('./actions/initializeActions');
 InitializeActions.initApp();
 
 Router.run(routes, function(Handler) {
-	React.render(React.createElement(Handler, null), document.getElementById('app'));
+	React.render(React.createElement(Handler, null), document.getElementById('app'))
 });
-},{"./actions/initializeActions":208,"./components/app":213,"./routes":223,"react":205,"react-router":35}],223:[function(require,module,exports){
+},{"./actions/initializeActions":208,"./components/app":214,"./routes":224,"react":205,"react-router":35}],224:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -39561,7 +39615,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/Home/homePage":211,"./components/about/aboutPage":212,"./components/app":213,"./components/products/productDetails":216,"./components/products/productsList":217,"./components/shoppingcart/shoppingCart":219,"react":205,"react-router":35}],224:[function(require,module,exports){
+},{"./components/Home/homePage":212,"./components/about/aboutPage":213,"./components/app":214,"./components/products/productDetails":217,"./components/products/productsList":218,"./components/shoppingcart/shoppingCart":220,"react":205,"react-router":35}],225:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require('../dispatcher/appDispatcher');
@@ -39572,50 +39626,66 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 var _products = [];
+var _productsInShoppingCart = [];
 
-var ShoppingCartStore = assign({}, EventEmitter.prototype, {
-	addChangeListener: function(callback) {
+var ProductsStore = assign({}, EventEmitter.prototype, {
+	addChangeListener: function (callback) {
 		this.on(CHANGE_EVENT, callback);
 	},
 
-	removeChangeListener: function(callback) {
+	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
 
-	emitChange: function() {
+	emitChange: function () {
 		this.emit(CHANGE_EVENT);
 	},
 
-	getAllProducts: function() {
+	getAllProducts: function () {
 		return _products;
 	},
 
-	getProductById: function(id) {
-		return _.find(_products, {id: id});
+	getProductById: function (id) {
+		return _.find(_products, { id: id });
+	},
+
+	getProductsFromShoppingCart: function () {
+		return _productsInShoppingCart;
 	}
 });
 
-Dispatcher.register(function(action) {
-	switch(action.actionType) {
+Dispatcher.register(function (action) {
+	switch (action.actionType) {
 		case ActionTypes.INITIALIZE:
 			_products = action.initialData.products;
-			ShoppingCartStore.emitChange();
+			ProductsStore.emitChange();
 			break;
-		case ActionTypes.ADD_Product:
-			_products.push(action.author);
-			ShoppingCartStore.emitChange();
-			break;		
-		case ActionTypes.DELETE_AUTHOR:
-			_.remove(_products, function(author) {
+		case ActionTypes.GET_PRODUCTS_FROM_SHOPPINGCART:
+			_productsInShoppingCart.push(action.products);
+			ProductsStore.emitChange();
+			break;
+		case ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART:
+			var product = action.addproduct.product;
+			var index = action.addproduct.productindex;
+
+			_productsInShoppingCart.push(product);
+
+			product.total = product.total - 1;
+			_products.splice(index, 1, product);
+
+			ProductsStore.emitChange();
+			break;
+		case ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART:
+			_.remove(_products, function (author) {
 				return action.id === author.id;
 			});
-			ShoppingCartStore.emitChange();
+			ProductsStore.emitChange();
 			break;
 		default:
-			// no op
+		// no op
 	}
 });
 
-module.exports = ShoppingCartStore;
+module.exports = ProductsStore;
 
-},{"../constants/actionTypes":220,"../dispatcher/appDispatcher":221,"events":2,"lodash":8,"object-assign":9}]},{},[222]);
+},{"../constants/actionTypes":221,"../dispatcher/appDispatcher":222,"events":2,"lodash":8,"object-assign":9}]},{},[223]);

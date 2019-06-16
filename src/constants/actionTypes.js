@@ -4,6 +4,7 @@ var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
     INITIALIZE: null,
-    ADD_Product: null,
-    REMOVE_PRODUCT: null
+    GET_PRODUCTS_FROM_SHOPPINGCART: null,
+    ADD_PRODUCT_TO_SHOPPINGCART: null,
+    REMOVE_PRODUCT_FROM_SHOPPINGCART: null
 });

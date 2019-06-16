@@ -1,49 +1,44 @@
 'use strict';
 var React = require('react');
 var Search = require("../search/search");
-var Product = require("./product")
+var Product = require("./product");
 var ProductApi = require("../../api/productsApi");
 var Router = require('react-router');
 var Link = Router.Link;
 var toastr = require('toastr');
+var ProductsStore = require("../../stores/productsStore");
+var ProductsAction = require('../../actions/productsActions');
 
 var App = React.createClass({
     getInitialState: function () {
         return {
             products: [],
-            soldProducts: [],
+            productsInShoppingCart: [],
             selectedProduct: ""
         };
     },
 
     componentWillMount: function () {
-        var _soldProducts = JSON.parse(localStorage.getItem("soldproducts"));
-        if (_soldProducts && _soldProducts.length > 0) {
-            this.setState({
-                soldProducts: _soldProducts
-            })
-        }
+        ProductsStore.addChangeListener(this._onChange);
     },
 
     componentDidMount: function () {
-        var _products = ProductApi.getAllProducts();
-        this.setState({ products: _products });
+        this.setState({ products: ProductsStore.getAllProducts() });
     },
 
+    //Clean up when this component is unmounted
     componentWillUnmount: function () {
-        localStorage.setItem("soldproducts", JSON.stringify(this.state.soldProducts));
+        ProductsStore.removeChangeListener(this._onChange);
     },
+
+    _onChange: function () {
+        this.setState({ products: ProductsStore.getAllProducts() });      
+    },        
 
     _buyProduct: function (index) {
-        var products = this.state.products;
-        var item = products[index];
-        item.total = item.total - 1;
-        products.splice(index, 1, item);
-        this.setState({ products: products });
-
-        var soldProducts = this.state.soldProducts;
-        soldProducts.push(item);
-        this.setState({ soldProducts: soldProducts });
+        var products = ProductsStore.getAllProducts();
+        var product = products[index];
+        ProductsAction.addProductToShoppingCart(product, index);       
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -64,17 +59,12 @@ var App = React.createClass({
         var prodObject = products.find(function (obj) { return obj.name === product.name; });
         prodObject.total = prodObject.total + 1;
         this.setState({ products: products });
-    },  
+    },
 
     render: function () {
         return (
             <div className="container">
                 <div className="container" >
-                    <Link to="shoppingcart">
-                        <span className="glyphicon glyphicon-shopping-cart">
-                            {this.state.soldProducts.length}
-                        </span>
-                    </Link>
                     <Search searchProducts={this._searchProducts} />
                     {
                         this.state.products.map((item, index) => {

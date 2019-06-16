@@ -8,48 +8,64 @@ var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
 var _products = [];
+var _productsInShoppingCart = [];
 
-var ShoppingCartStore = assign({}, EventEmitter.prototype, {
-	addChangeListener: function(callback) {
+var ProductsStore = assign({}, EventEmitter.prototype, {
+	addChangeListener: function (callback) {
 		this.on(CHANGE_EVENT, callback);
 	},
 
-	removeChangeListener: function(callback) {
+	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
 
-	emitChange: function() {
+	emitChange: function () {
 		this.emit(CHANGE_EVENT);
 	},
 
-	getAllProducts: function() {
+	getAllProducts: function () {
 		return _products;
 	},
 
-	getProductById: function(id) {
-		return _.find(_products, {id: id});
+	getProductById: function (id) {
+		return _.find(_products, { id: id });
+	},
+
+	getProductsFromShoppingCart: function () {
+		return _productsInShoppingCart;
 	}
 });
 
-Dispatcher.register(function(action) {
-	switch(action.actionType) {
+Dispatcher.register(function (action) {
+	switch (action.actionType) {
 		case ActionTypes.INITIALIZE:
 			_products = action.initialData.products;
-			ShoppingCartStore.emitChange();
+			ProductsStore.emitChange();
 			break;
-		case ActionTypes.ADD_Product:
-			_products.push(action.author);
-			ShoppingCartStore.emitChange();
-			break;		
-		case ActionTypes.DELETE_AUTHOR:
-			_.remove(_products, function(author) {
+		case ActionTypes.GET_PRODUCTS_FROM_SHOPPINGCART:
+			_productsInShoppingCart.push(action.products);
+			ProductsStore.emitChange();
+			break;
+		case ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART:
+			var product = action.addproduct.product;
+			var index = action.addproduct.productindex;
+
+			_productsInShoppingCart.push(product);
+
+			product.total = product.total - 1;
+			_products.splice(index, 1, product);
+
+			ProductsStore.emitChange();
+			break;
+		case ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART:
+			_.remove(_products, function (author) {
 				return action.id === author.id;
 			});
-			ShoppingCartStore.emitChange();
+			ProductsStore.emitChange();
 			break;
 		default:
-			// no op
+		// no op
 	}
 });
 
-module.exports = ShoppingCartStore;
+module.exports = ProductsStore;
