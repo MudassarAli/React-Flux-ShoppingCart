@@ -38902,12 +38902,15 @@ var AuthorActions = {
         });
     },
 
-    removeProductFromShoppingCart: function (id) {
-        ProductsApi.removeProduct(id);
+    removeProductFromShoppingCart: function (product, index) {
+        //ProductsApi.removeProduct(index);
 
         Dispatcher.dispatch({
-            actionType: ActionTypes.Remove_Product_From_ShoppingCart,
-            id: id
+            actionType: ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART,
+            remove: {
+                product: product,
+                productindex: index
+            }
         });
     }
 };
@@ -39300,20 +39303,19 @@ var App = React.createClass({displayName: "App",
     componentDidMount: function () {
         this.setState({ products: ProductsStore.getAllProducts() });
     },
-
-    //Clean up when this component is unmounted
+    
     componentWillUnmount: function () {
         ProductsStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });      
-    },        
+        this.setState({ products: ProductsStore.getAllProducts() });
+    },
 
     _buyProduct: function (index) {
         var products = ProductsStore.getAllProducts();
         var product = products[index];
-        ProductsAction.addProductToShoppingCart(product, index);       
+        ProductsAction.addProductToShoppingCart(product, index);
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -39323,17 +39325,6 @@ var App = React.createClass({displayName: "App",
             return item.name.indexOf(value) !== -1;
         });
         this.setState({ products: updatedList });
-    },
-
-    _removeProduct: function (product, itemIndex) {
-        var soldproducts = this.state.soldProducts;
-        soldproducts.splice(itemIndex, 1);
-        this.setState({ soldProducts: soldproducts });
-
-        var products = this.state.products;
-        var prodObject = products.find(function (obj) { return obj.name === product.name; });
-        prodObject.total = prodObject.total + 1;
-        this.setState({ products: products });
     },
 
     render: function () {
@@ -39346,8 +39337,7 @@ var App = React.createClass({displayName: "App",
                             return React.createElement(Product, {
                                 item: item, 
                                 index: index, 
-                                buyProduct: this._buyProduct, 
-                                removeProduct: this._removeProduct})
+                                buyProduct: this._buyProduct})
                         })
                     
                 )
@@ -39408,9 +39398,9 @@ var Link = Router.Link;
 var toastr = require('toastr');
 var swal = require('sweetalert');
 var ProductsStore = require("../../stores/productsStore");
+var ProductsAction = require('../../actions/productsActions');
 
 var ShoppingCart = React.createClass({displayName: "ShoppingCart",
-
     getInitialState: function () {
         return {
             _productsInShoppingCart: []
@@ -39418,8 +39408,19 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
     },
 
     componentWillMount: function () {
-        var productsInShoppingCart = ProductsStore.getProductsFromShoppingCart();
-        this.setState({ _productsInShoppingCart: productsInShoppingCart });
+        ProductsStore.addChangeListener(this._onChange);
+    },
+
+    componentDidMount: function () {
+        this.setState({ _productsInShoppingCart: ProductsStore.getProductsFromShoppingCart() });
+    },
+
+    componentWillUnmount: function () {
+        ProductsStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+        this.setState({ _productsInShoppingCart: ProductsStore.getProductsFromShoppingCart() });
     },
 
     _removeProduct: function (product, itemIndex) {
@@ -39432,12 +39433,8 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    swal("Product removed!", { icon: "success", });
-
-                    var soldproducts = this.state.productsInShoppingcart;
-                    soldproducts.splice(itemIndex, 1);
-                    this.setState({ soldProducts: soldproducts });
-
+                    ProductsAction.removeProductFromShoppingCart(product, itemIndex);
+                    swal("Product removed!", { icon: "success", });                   
                 } else {
                     swal("Product not removed!");
                 }
@@ -39453,7 +39450,6 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
         };
 
         var items = this.state._productsInShoppingCart.map((item, index) => {
-            console.log(item);
             TotalAmount = +TotalAmount + +item.price;
             GrandTotal = (+GrandTotal + +TotalAmount)
 
@@ -39499,7 +39495,6 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
                             ), 
                             React.createElement("tbody", null, 
                                 items, 
-
                                 React.createElement("tr", null, 
                                     React.createElement("td", null, "   "), 
                                     React.createElement("td", null, "   "), 
@@ -39539,7 +39534,6 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
                                     )
                                 )
                             )
-
                         )
                     )
                 )
@@ -39550,7 +39544,7 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
 
 module.exports = ShoppingCart;
 
-},{"../../stores/productsStore":225,"react":205,"react-router":35,"sweetalert":206,"toastr":207}],221:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../stores/productsStore":225,"react":205,"react-router":35,"sweetalert":206,"toastr":207}],221:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require('react/lib/keyMirror');
@@ -39676,9 +39670,13 @@ Dispatcher.register(function (action) {
 			ProductsStore.emitChange();
 			break;
 		case ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART:
-			_.remove(_products, function (author) {
-				return action.id === author.id;
-			});
+			var prodcstindex = action.remove.productindex;
+			var producttoremove = action.remove.product;
+			_productsInShoppingCart.splice(prodcstindex, 1);
+
+			var prodObject = _products.find(function (obj) { return obj.name === producttoremove.name; });
+			prodObject.total = prodObject.total + 1;
+
 			ProductsStore.emitChange();
 			break;
 		default:

@@ -25,20 +25,19 @@ var App = React.createClass({
     componentDidMount: function () {
         this.setState({ products: ProductsStore.getAllProducts() });
     },
-
-    //Clean up when this component is unmounted
+    
     componentWillUnmount: function () {
         ProductsStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });      
-    },        
+        this.setState({ products: ProductsStore.getAllProducts() });
+    },
 
     _buyProduct: function (index) {
         var products = ProductsStore.getAllProducts();
         var product = products[index];
-        ProductsAction.addProductToShoppingCart(product, index);       
+        ProductsAction.addProductToShoppingCart(product, index);
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -48,17 +47,6 @@ var App = React.createClass({
             return item.name.indexOf(value) !== -1;
         });
         this.setState({ products: updatedList });
-    },
-
-    _removeProduct: function (product, itemIndex) {
-        var soldproducts = this.state.soldProducts;
-        soldproducts.splice(itemIndex, 1);
-        this.setState({ soldProducts: soldproducts });
-
-        var products = this.state.products;
-        var prodObject = products.find(function (obj) { return obj.name === product.name; });
-        prodObject.total = prodObject.total + 1;
-        this.setState({ products: products });
     },
 
     render: function () {
@@ -71,8 +59,7 @@ var App = React.createClass({
                             return <Product
                                 item={item}
                                 index={index}
-                                buyProduct={this._buyProduct}
-                                removeProduct={this._removeProduct} />
+                                buyProduct={this._buyProduct} />
                         })
                     }
                 </div>

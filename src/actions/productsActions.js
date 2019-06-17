@@ -26,12 +26,15 @@ var AuthorActions = {
         });
     },
 
-    removeProductFromShoppingCart: function (id) {
-        ProductsApi.removeProduct(id);
+    removeProductFromShoppingCart: function (product, index) {
+        //ProductsApi.removeProduct(index);
 
         Dispatcher.dispatch({
-            actionType: ActionTypes.Remove_Product_From_ShoppingCart,
-            id: id
+            actionType: ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART,
+            remove: {
+                product: product,
+                productindex: index
+            }
         });
     }
 };

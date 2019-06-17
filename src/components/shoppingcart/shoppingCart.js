@@ -5,9 +5,9 @@ var Link = Router.Link;
 var toastr = require('toastr');
 var swal = require('sweetalert');
 var ProductsStore = require("../../stores/productsStore");
+var ProductsAction = require('../../actions/productsActions');
 
 var ShoppingCart = React.createClass({
-
     getInitialState: function () {
         return {
             _productsInShoppingCart: []
@@ -15,8 +15,19 @@ var ShoppingCart = React.createClass({
     },
 
     componentWillMount: function () {
-        var productsInShoppingCart = ProductsStore.getProductsFromShoppingCart();
-        this.setState({ _productsInShoppingCart: productsInShoppingCart });
+        ProductsStore.addChangeListener(this._onChange);
+    },
+
+    componentDidMount: function () {
+        this.setState({ _productsInShoppingCart: ProductsStore.getProductsFromShoppingCart() });
+    },
+
+    componentWillUnmount: function () {
+        ProductsStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+        this.setState({ _productsInShoppingCart: ProductsStore.getProductsFromShoppingCart() });
     },
 
     _removeProduct: function (product, itemIndex) {
@@ -29,12 +40,8 @@ var ShoppingCart = React.createClass({
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    swal("Product removed!", { icon: "success", });
-
-                    var soldproducts = this.state.productsInShoppingcart;
-                    soldproducts.splice(itemIndex, 1);
-                    this.setState({ soldProducts: soldproducts });
-
+                    ProductsAction.removeProductFromShoppingCart(product, itemIndex);
+                    swal("Product removed!", { icon: "success", });                   
                 } else {
                     swal("Product not removed!");
                 }
@@ -50,7 +57,6 @@ var ShoppingCart = React.createClass({
         };
 
         var items = this.state._productsInShoppingCart.map((item, index) => {
-            console.log(item);
             TotalAmount = +TotalAmount + +item.price;
             GrandTotal = (+GrandTotal + +TotalAmount)
 
@@ -96,7 +102,6 @@ var ShoppingCart = React.createClass({
                             </thead>
                             <tbody>
                                 {items}
-
                                 <tr>
                                     <td>   </td>
                                     <td>   </td>
@@ -136,7 +141,6 @@ var ShoppingCart = React.createClass({
                                     </td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
                 </div>
