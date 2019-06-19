@@ -17,6 +17,7 @@ var App = React.createClass({
             products: [],
             categories: [],
             productsInShoppingCart: [],
+            selectedCategoriIndex: -1,
             selectedProduct: ""
         };
     },
@@ -27,9 +28,9 @@ var App = React.createClass({
 
     componentDidMount: function () {
         var items = ProductsStore.getAllProducts();
-        var _categories = _(items).pluck('category').__wrapped__;       
+        var _categories = _(items).pluck('category').__wrapped__;
         this.setState({ categories: _categories });
-     
+        this.setState({ selectedCategori: 0 });
         this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
     },
 
@@ -56,24 +57,38 @@ var App = React.createClass({
         this.setState({ products: updatedList });
     },
 
+    _selectedCategory: function (index) {      
+        this.setState({ selectedCategori: index });
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
+    },
+
     render: function () {
         return (
             <div className="container">
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Search searchProducts={this._searchProducts} />
+                        <br></br>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-2">
+                        <ProductCategories productCategories={this.state.categories}
+                            selectedCategori={this._selectedCategory} />
+                        <br></br>
+                    </div>
+                    <div className="col-lg-10">
+                        {
+                            this.state.products.map((item, index) => {
+                                return <Product
+                                    item={item}
+                                    index={index}
+                                    buyProduct={this._buyProduct} />
+                            })
+                        }
+                    </div>
 
-                <Search searchProducts={this._searchProducts} />
-                <br></br>
-                <ProductCategories productCategories= {this.state.categories} />
-                <br></br>
-
-                {
-                    this.state.products.map((item, index) => {
-                        return <Product
-                            item={item}
-                            index={index}
-                            buyProduct={this._buyProduct} />
-                    })
-                }
-
+                </div>
             </div>
         );
     }

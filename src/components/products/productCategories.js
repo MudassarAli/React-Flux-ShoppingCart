@@ -11,16 +11,17 @@ var ProductCategories = React.createClass({
     getInitialState: function () {
         return null;
     },
+    handleClick: function (index, event) {
+        this.props.selectedCategori(index);
+    },
 
     render: function () {
         return (
-            <div className="container">
-                <ul>
-                    {this.props.productCategories.map((categori, index) => {
-                        return <li>{categori}</li>
-                    })
-                    }
-                </ul>
+            <div className="list-group">
+                {this.props.productCategories.map((categori, index) => {
+                    return <a onClick={() => this.handleClick(index)} className="list-group-item list-group-item-action"> {categori}</a>
+                })
+                }
             </div>
         );
     }

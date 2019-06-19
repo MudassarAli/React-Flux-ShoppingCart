@@ -38977,89 +38977,175 @@ module.exports = ProductApi;
 module.exports = {
     products: [
         {
-            category: "Beverages",
+            category: "Data",
             items: [
                 {
                     id: "1",
-                    name: "Cococola",
+                    name: "PC",
                     description: "Best product ever.",
                     price: "2.00",
                     total: 5,
-                    imageurl: "https://image.ibb.co/fcPC5e/download.jpg"
+                    imageurl: "https://i.ibb.co/xHJqx2N/laptop.png"
                 },
                 {
                     id: "2",
-                    name: "Fanta",
+                    name: "Mac",
                     description: "Best product ever.",
                     price: "3.00", total: 5,
-                    imageurl: "https://image.ibb.co/n1FoBK/fanta.jpg"
+                    imageurl: "https://i.ibb.co/c2dJtcp/mac.png"
                 },
                 {
                     id: "3",
-                    name: "Sprite",
+                    name: "Stasjonar",
                     description: "Best product ever.",
                     price: "4.00",
                     total: 5,
-                    imageurl: "https://image.ibb.co/hDG6yz/Sprite.jpg"
-                },
-                {
-                    id: "4",
-                    name: "Dew",
-                    description: "Best product ever.",
-                    price: "5.00", total: 5,
-                    imageurl: "https://image.ibb.co/iaBvrK/Mountain_Dew.jpg"
-                },
-                {
-                    id: "5",
-                    name: "Redbull",
-                    description: "Best product ever.",
-                    price: "6.00",
-                    total: 0,
-                    imageurl: "https://preview.ibb.co/kFDEke/Redbull.jpg"
+                    imageurl: "https://i.ibb.co/9tVLK93/stasjon.png"
                 }
 
             ]
         },
         {
-            category: "Electronics",
+            category: "Gaming",
             items: [
                 {
                     id: "1",
-                    name: "Cococola",
+                    name: "XBOX",
                     description: "Best product ever.",
                     price: "2.00",
                     total: 5,
-                    imageurl: "https://image.ibb.co/fcPC5e/download.jpg"
+                    imageurl: "https://i.ibb.co/JvZ5dNF/xbox.png"
                 },
                 {
                     id: "2",
-                    name: "Fanta",
+                    name: "Play Station",
                     description: "Best product ever.",
                     price: "3.00", total: 5,
-                    imageurl: "https://image.ibb.co/n1FoBK/fanta.jpg"
+                    imageurl: "https://i.ibb.co/hHP5vhj/playstation-4.png"
                 },
                 {
                     id: "3",
-                    name: "Sprite",
+                    name: "Nintendo",
                     description: "Best product ever.",
                     price: "4.00",
                     total: 5,
-                    imageurl: "https://image.ibb.co/hDG6yz/Sprite.jpg"
+                    imageurl: "https://i.ibb.co/Wn1Wrxc/Nintendo.png"
+                }
+
+            ]
+        },
+        {
+            category: "Hvitevarer",
+            items: [
+                {
+                    id: "1",
+                    name: "Vaskemaskin",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/sWxQh4H/washingmachine.png"
                 },
                 {
-                    id: "4",
-                    name: "Dew",
+                    id: "2",
+                    name: "Vinskap",
                     description: "Best product ever.",
-                    price: "5.00", total: 5,
-                    imageurl: "https://image.ibb.co/iaBvrK/Mountain_Dew.jpg"
+                    price: "3.00", total: 5,
+                    imageurl: "https://i.ibb.co/23W4hxY/winecabinet.png"
                 },
                 {
-                    id: "5",
-                    name: "Redbull",
+                    id: "3",
+                    name: "Ventilator",
                     description: "Best product ever.",
-                    price: "6.00",
-                    total: 0,
-                    imageurl: "https://preview.ibb.co/kFDEke/Redbull.jpg"
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/mcSjZGp/ventilation.png"
+                }
+
+            ]
+        },
+        {
+            category: "TV og bilde",
+            items: [
+                {
+                    id: "1",
+                    name: "Samsung",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/Y2vfDpr/samsung.png"
+                },
+                {
+                    id: "2",
+                    name: "Philips",
+                    description: "Best product ever.",
+                    price: "3.00", total: 5,
+                    imageurl: "https://i.ibb.co/261FZV2/Philips.png"
+                },
+                {
+                    id: "3",
+                    name: "LG",
+                    description: "Best product ever.",
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/wscm2ts/LG.png"
+                }
+
+            ]
+        },
+        {
+            category: "Lyd & Hi-Fi",
+            items: [
+                {
+                    id: "1",
+                    name: "Beats",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/zmcqRGg/beats.png"
+                },
+                {
+                    id: "2",
+                    name: "Sony",
+                    description: "Best product ever.",
+                    price: "3.00", total: 5,
+                    imageurl: "https://i.ibb.co/j3MTzCQ/skullcandy-venue-traadloese-around-ear-hodetelefoner-sort.png"
+                },
+                {
+                    id: "3",
+                    name: "Seista",
+                    description: "Best product ever.",
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/KKVZxkt/skullcandy.png"
+                }
+
+            ]
+        },
+        {
+            category: "Mobil & GPS",
+            items: [
+                {
+                    id: "1",
+                    name: "Huawei",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/TtFV2Fs/huawei.png"
+                },
+                {
+                    id: "2",
+                    name: "Samsung",
+                    description: "Best product ever.",
+                    price: "3.00", total: 5,
+                    imageurl: "https://i.ibb.co/nbpGY9D/iphone.png"
+                },
+                {
+                    id: "3",
+                    name: "Apple",
+                    description: "Best product ever.",
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://i.ibb.co/4s1Z0Qv/samsung.png"
                 }
 
             ]
@@ -39287,16 +39373,17 @@ var ProductCategories = React.createClass({displayName: "ProductCategories",
     getInitialState: function () {
         return null;
     },
+    handleClick: function (index, event) {
+        this.props.selectedCategori(index);
+    },
 
     render: function () {
         return (
-            React.createElement("div", {className: "container"}, 
-                React.createElement("ul", null, 
-                    this.props.productCategories.map((categori, index) => {
-                        return React.createElement("li", null, categori)
-                    })
-                    
-                )
+            React.createElement("div", {className: "list-group"}, 
+                this.props.productCategories.map((categori, index) => {
+                    return React.createElement("a", {onClick: () => this.handleClick(index), className: "list-group-item list-group-item-action"}, " ", categori)
+                })
+                
             )
         );
     }
@@ -39381,6 +39468,7 @@ var App = React.createClass({displayName: "App",
             products: [],
             categories: [],
             productsInShoppingCart: [],
+            selectedCategoriIndex: -1,
             selectedProduct: ""
         };
     },
@@ -39391,9 +39479,9 @@ var App = React.createClass({displayName: "App",
 
     componentDidMount: function () {
         var items = ProductsStore.getAllProducts();
-        var _categories = _(items).pluck('category').__wrapped__;       
+        var _categories = _(items).pluck('category').__wrapped__;
         this.setState({ categories: _categories });
-     
+        this.setState({ selectedCategori: 0 });
         this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
     },
 
@@ -39420,24 +39508,38 @@ var App = React.createClass({displayName: "App",
         this.setState({ products: updatedList });
     },
 
+    _selectedCategory: function (index) {      
+        this.setState({ selectedCategori: index });
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
+    },
+
     render: function () {
         return (
             React.createElement("div", {className: "container"}, 
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "col-lg-12"}, 
+                        React.createElement(Search, {searchProducts: this._searchProducts}), 
+                        React.createElement("br", null)
+                    )
+                ), 
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "col-lg-2"}, 
+                        React.createElement(ProductCategories, {productCategories: this.state.categories, 
+                            selectedCategori: this._selectedCategory}), 
+                        React.createElement("br", null)
+                    ), 
+                    React.createElement("div", {className: "col-lg-10"}, 
+                        
+                            this.state.products.map((item, index) => {
+                                return React.createElement(Product, {
+                                    item: item, 
+                                    index: index, 
+                                    buyProduct: this._buyProduct})
+                            })
+                        
+                    )
 
-                React.createElement(Search, {searchProducts: this._searchProducts}), 
-                React.createElement("br", null), 
-                React.createElement(ProductCategories, {productCategories: this.state.categories}), 
-                React.createElement("br", null), 
-
-                
-                    this.state.products.map((item, index) => {
-                        return React.createElement(Product, {
-                            item: item, 
-                            index: index, 
-                            buyProduct: this._buyProduct})
-                    })
-                
-
+                )
             )
         );
     }
@@ -39679,7 +39781,6 @@ var App = require('./components/app');
 var InitializeActions = require('./actions/initializeActions');
 
 InitializeActions.initApp();
-//InitializeActions.initProductCategories();
 
 Router.run(routes, function(Handler) {
 	React.render(React.createElement(Handler, null), document.getElementById('app'))
