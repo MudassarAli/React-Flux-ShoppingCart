@@ -14,7 +14,11 @@ var _clone = function (item) {
 };
 
 var ProductApi = {
-    getAllProducts: function () {
+    getProductCategories: function () {
+        return _clone(products.category);
+    },
+
+    getAllProducts: function () {      
         return _clone(products);
     },
 

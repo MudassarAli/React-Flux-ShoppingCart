@@ -12,7 +12,7 @@ var HomePage = React.createClass({
 
     componentWillMount: function () {
         var _products = ProductsStore.getAllProducts();//ProductApi.getAllProducts();
-        var randomProduct = _products[Math.floor(Math.random() * _products.length)];
+        var randomProduct = _products[Math.floor(Math.random() * _products.length)].items[Math.floor(Math.random() * _products.length)];
 
         this.setState({
             item: randomProduct

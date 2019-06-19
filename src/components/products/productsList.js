@@ -8,11 +8,14 @@ var Link = Router.Link;
 var toastr = require('toastr');
 var ProductsStore = require("../../stores/productsStore");
 var ProductsAction = require('../../actions/productsActions');
+var _ = require('lodash');
+var ProductCategories = require("./productCategories");
 
 var App = React.createClass({
     getInitialState: function () {
         return {
             products: [],
+            categories: [],
             productsInShoppingCart: [],
             selectedProduct: ""
         };
@@ -23,9 +26,13 @@ var App = React.createClass({
     },
 
     componentDidMount: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });
+        var items = ProductsStore.getAllProducts();
+        var _categories = _(items).pluck('category').__wrapped__;       
+        this.setState({ categories: _categories });
+     
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
     },
-    
+
     componentWillUnmount: function () {
         ProductsStore.removeChangeListener(this._onChange);
     },
@@ -52,17 +59,21 @@ var App = React.createClass({
     render: function () {
         return (
             <div className="container">
-                <div className="container" >
-                    <Search searchProducts={this._searchProducts} />
-                    {
-                        this.state.products.map((item, index) => {
-                            return <Product
-                                item={item}
-                                index={index}
-                                buyProduct={this._buyProduct} />
-                        })
-                    }
-                </div>
+
+                <Search searchProducts={this._searchProducts} />
+                <br></br>
+                <ProductCategories productCategories= {this.state.categories} />
+                <br></br>
+
+                {
+                    this.state.products.map((item, index) => {
+                        return <Product
+                            item={item}
+                            index={index}
+                            buyProduct={this._buyProduct} />
+                    })
+                }
+
             </div>
         );
     }

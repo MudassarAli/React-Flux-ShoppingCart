@@ -38861,19 +38861,19 @@ var ActionTypes = require('../constants/actionTypes');
 var ProductsApi = require('../api/productsApi');
 
 var InitializeActions = {
-	initApp: function() {
+	initApp: function () {
 		Dispatcher.dispatch({
 			actionType: ActionTypes.INITIALIZE,
 			initialData: {
 				products: ProductsApi.getAllProducts()
 			}
 		});
-	}
+	}	
 };
 
 module.exports = InitializeActions;
 
-},{"../api/productsApi":210,"../constants/actionTypes":221,"../dispatcher/appDispatcher":222}],209:[function(require,module,exports){
+},{"../api/productsApi":210,"../constants/actionTypes":222,"../dispatcher/appDispatcher":223}],209:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require('../dispatcher/appDispatcher');
@@ -38917,7 +38917,7 @@ var AuthorActions = {
 
 module.exports = AuthorActions;
 
-},{"../api/productsApi":210,"../constants/actionTypes":221,"../dispatcher/appDispatcher":222,"../stores/productsStore":225}],210:[function(require,module,exports){
+},{"../api/productsApi":210,"../constants/actionTypes":222,"../dispatcher/appDispatcher":223,"../stores/productsStore":226}],210:[function(require,module,exports){
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
@@ -38934,7 +38934,11 @@ var _clone = function (item) {
 };
 
 var ProductApi = {
-    getAllProducts: function () {
+    getProductCategories: function () {
+        return _clone(products.category);
+    },
+
+    getAllProducts: function () {      
         return _clone(products);
     },
 
@@ -38973,43 +38977,94 @@ module.exports = ProductApi;
 module.exports = {
     products: [
         {
-            id: "1",
-            name: "Cococola",
-            description: "Best product ever.",
-            price: "2.00",
-            total: 5,
-            imageurl: "https://image.ibb.co/fcPC5e/download.jpg"
+            category: "Beverages",
+            items: [
+                {
+                    id: "1",
+                    name: "Cococola",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://image.ibb.co/fcPC5e/download.jpg"
+                },
+                {
+                    id: "2",
+                    name: "Fanta",
+                    description: "Best product ever.",
+                    price: "3.00", total: 5,
+                    imageurl: "https://image.ibb.co/n1FoBK/fanta.jpg"
+                },
+                {
+                    id: "3",
+                    name: "Sprite",
+                    description: "Best product ever.",
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://image.ibb.co/hDG6yz/Sprite.jpg"
+                },
+                {
+                    id: "4",
+                    name: "Dew",
+                    description: "Best product ever.",
+                    price: "5.00", total: 5,
+                    imageurl: "https://image.ibb.co/iaBvrK/Mountain_Dew.jpg"
+                },
+                {
+                    id: "5",
+                    name: "Redbull",
+                    description: "Best product ever.",
+                    price: "6.00",
+                    total: 0,
+                    imageurl: "https://preview.ibb.co/kFDEke/Redbull.jpg"
+                }
+
+            ]
         },
         {
-            id: "2",
-            name: "Fanta",
-            description: "Best product ever.",
-            price: "3.00", total: 5,
-            imageurl: "https://image.ibb.co/n1FoBK/fanta.jpg"
-        },
-        {
-            id: "3",
-            name: "Sprite",
-            description: "Best product ever.",
-            price: "4.00",
-            total: 5,
-            imageurl: "https://image.ibb.co/hDG6yz/Sprite.jpg"
-        },
-        {
-            id: "4",
-            name: "Dew",
-            description: "Best product ever.",
-            price: "5.00", total: 5,
-            imageurl: "https://image.ibb.co/iaBvrK/Mountain_Dew.jpg"
-        },
-        {
-            id: "5",
-            name: "Redbull",
-            description: "Best product ever.",
-            price: "6.00",
-            total: 0,
-            imageurl: "https://preview.ibb.co/kFDEke/Redbull.jpg"
+            category: "Electronics",
+            items: [
+                {
+                    id: "1",
+                    name: "Cococola",
+                    description: "Best product ever.",
+                    price: "2.00",
+                    total: 5,
+                    imageurl: "https://image.ibb.co/fcPC5e/download.jpg"
+                },
+                {
+                    id: "2",
+                    name: "Fanta",
+                    description: "Best product ever.",
+                    price: "3.00", total: 5,
+                    imageurl: "https://image.ibb.co/n1FoBK/fanta.jpg"
+                },
+                {
+                    id: "3",
+                    name: "Sprite",
+                    description: "Best product ever.",
+                    price: "4.00",
+                    total: 5,
+                    imageurl: "https://image.ibb.co/hDG6yz/Sprite.jpg"
+                },
+                {
+                    id: "4",
+                    name: "Dew",
+                    description: "Best product ever.",
+                    price: "5.00", total: 5,
+                    imageurl: "https://image.ibb.co/iaBvrK/Mountain_Dew.jpg"
+                },
+                {
+                    id: "5",
+                    name: "Redbull",
+                    description: "Best product ever.",
+                    price: "6.00",
+                    total: 0,
+                    imageurl: "https://preview.ibb.co/kFDEke/Redbull.jpg"
+                }
+
+            ]
         }
+
     ]
 };
 },{}],212:[function(require,module,exports){
@@ -39027,7 +39082,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
     componentWillMount: function () {
         var _products = ProductsStore.getAllProducts();//ProductApi.getAllProducts();
-        var randomProduct = _products[Math.floor(Math.random() * _products.length)];
+        var randomProduct = _products[Math.floor(Math.random() * _products.length)].items[Math.floor(Math.random() * _products.length)];
 
         this.setState({
             item: randomProduct
@@ -39055,7 +39110,7 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"../../stores/productsStore":225,"react":205}],213:[function(require,module,exports){
+},{"../../stores/productsStore":226,"react":205}],213:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -39169,7 +39224,7 @@ var Header = React.createClass({displayName: "Header",
 });
 
 module.exports = Header;
-},{"../../actions/productsActions":209,"../../stores/productsStore":225,"react":205,"react-router":35}],216:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../stores/productsStore":226,"react":205,"react-router":35}],216:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Router = require('react-router');
@@ -39219,6 +39274,37 @@ var Product = React.createClass({displayName: "Product",
 module.exports = Product;
 
 },{"react":205,"react-router":35}],217:[function(require,module,exports){
+'use strict';
+var React = require('react');
+var ProductApi = require("../../api/productsApi");
+var Router = require('react-router');
+var ProductsStore = require("../../stores/productsStore");
+var Link = Router.Link;
+var toastr = require('toastr');
+var _ = require('lodash');
+
+var ProductCategories = React.createClass({displayName: "ProductCategories",
+    getInitialState: function () {
+        return null;
+    },
+
+    render: function () {
+        return (
+            React.createElement("div", {className: "container"}, 
+                React.createElement("ul", null, 
+                    this.props.productCategories.map((categori, index) => {
+                        return React.createElement("li", null, categori)
+                    })
+                    
+                )
+            )
+        );
+    }
+});
+
+module.exports = ProductCategories;
+
+},{"../../api/productsApi":210,"../../stores/productsStore":226,"lodash":8,"react":205,"react-router":35,"toastr":207}],218:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var ProductApi = require("../../api/productsApi");
@@ -39275,7 +39361,7 @@ var ProductDetails = React.createClass({displayName: "ProductDetails",
 
 module.exports = ProductDetails;
 
-},{"../../api/productsApi":210,"react":205,"react-router":35,"toastr":207}],218:[function(require,module,exports){
+},{"../../api/productsApi":210,"react":205,"react-router":35,"toastr":207}],219:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Search = require("../search/search");
@@ -39286,11 +39372,14 @@ var Link = Router.Link;
 var toastr = require('toastr');
 var ProductsStore = require("../../stores/productsStore");
 var ProductsAction = require('../../actions/productsActions');
+var _ = require('lodash');
+var ProductCategories = require("./productCategories");
 
 var App = React.createClass({displayName: "App",
     getInitialState: function () {
         return {
             products: [],
+            categories: [],
             productsInShoppingCart: [],
             selectedProduct: ""
         };
@@ -39301,9 +39390,13 @@ var App = React.createClass({displayName: "App",
     },
 
     componentDidMount: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });
+        var items = ProductsStore.getAllProducts();
+        var _categories = _(items).pluck('category').__wrapped__;       
+        this.setState({ categories: _categories });
+     
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
     },
-    
+
     componentWillUnmount: function () {
         ProductsStore.removeChangeListener(this._onChange);
     },
@@ -39330,24 +39423,28 @@ var App = React.createClass({displayName: "App",
     render: function () {
         return (
             React.createElement("div", {className: "container"}, 
-                React.createElement("div", {className: "container"}, 
-                    React.createElement(Search, {searchProducts: this._searchProducts}), 
-                    
-                        this.state.products.map((item, index) => {
-                            return React.createElement(Product, {
-                                item: item, 
-                                index: index, 
-                                buyProduct: this._buyProduct})
-                        })
-                    
-                )
+
+                React.createElement(Search, {searchProducts: this._searchProducts}), 
+                React.createElement("br", null), 
+                React.createElement(ProductCategories, {productCategories: this.state.categories}), 
+                React.createElement("br", null), 
+
+                
+                    this.state.products.map((item, index) => {
+                        return React.createElement(Product, {
+                            item: item, 
+                            index: index, 
+                            buyProduct: this._buyProduct})
+                    })
+                
+
             )
         );
     }
 }
 );
 module.exports = App;
-},{"../../actions/productsActions":209,"../../api/productsApi":210,"../../stores/productsStore":225,"../search/search":219,"./product":216,"react":205,"react-router":35,"toastr":207}],219:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../api/productsApi":210,"../../stores/productsStore":226,"../search/search":220,"./product":216,"./productCategories":217,"lodash":8,"react":205,"react-router":35,"toastr":207}],220:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -39390,7 +39487,7 @@ var Search = React.createClass({displayName: "Search",
 
 module.exports = Search;
 
-},{"react":205}],220:[function(require,module,exports){
+},{"react":205}],221:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Router = require('react-router');
@@ -39544,7 +39641,7 @@ var ShoppingCart = React.createClass({displayName: "ShoppingCart",
 
 module.exports = ShoppingCart;
 
-},{"../../actions/productsActions":209,"../../stores/productsStore":225,"react":205,"react-router":35,"sweetalert":206,"toastr":207}],221:[function(require,module,exports){
+},{"../../actions/productsActions":209,"../../stores/productsStore":226,"react":205,"react-router":35,"sweetalert":206,"toastr":207}],222:[function(require,module,exports){
 "use strict";
 
 var keyMirror = require('react/lib/keyMirror');
@@ -39556,7 +39653,7 @@ module.exports = keyMirror({
     REMOVE_PRODUCT_FROM_SHOPPINGCART: null
 });
 
-},{"react/lib/keyMirror":190}],222:[function(require,module,exports){
+},{"react/lib/keyMirror":190}],223:[function(require,module,exports){
 /*
  * Copyright (c) 2015, Facebook, Inc.
  * All rights reserved.
@@ -39574,7 +39671,7 @@ var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher();
 
-},{"flux":4}],223:[function(require,module,exports){
+},{"flux":4}],224:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./routes');
@@ -39582,11 +39679,12 @@ var App = require('./components/app');
 var InitializeActions = require('./actions/initializeActions');
 
 InitializeActions.initApp();
+//InitializeActions.initProductCategories();
 
 Router.run(routes, function(Handler) {
 	React.render(React.createElement(Handler, null), document.getElementById('app'))
 });
-},{"./actions/initializeActions":208,"./components/app":214,"./routes":224,"react":205,"react-router":35}],224:[function(require,module,exports){
+},{"./actions/initializeActions":208,"./components/app":214,"./routes":225,"react":205,"react-router":35}],225:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -39609,7 +39707,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/Home/homePage":212,"./components/about/aboutPage":213,"./components/app":214,"./components/products/productDetails":217,"./components/products/productsList":218,"./components/shoppingcart/shoppingCart":220,"react":205,"react-router":35}],225:[function(require,module,exports){
+},{"./components/Home/homePage":212,"./components/about/aboutPage":213,"./components/app":214,"./components/products/productDetails":218,"./components/products/productsList":219,"./components/shoppingcart/shoppingCart":221,"react":205,"react-router":35}],226:[function(require,module,exports){
 "use strict";
 
 var Dispatcher = require('../dispatcher/appDispatcher');
@@ -39686,4 +39784,4 @@ Dispatcher.register(function (action) {
 
 module.exports = ProductsStore;
 
-},{"../constants/actionTypes":221,"../dispatcher/appDispatcher":222,"events":2,"lodash":8,"object-assign":9}]},{},[223]);
+},{"../constants/actionTypes":222,"../dispatcher/appDispatcher":223,"events":2,"lodash":8,"object-assign":9}]},{},[224]);
