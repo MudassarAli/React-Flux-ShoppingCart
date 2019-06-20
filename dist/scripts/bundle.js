@@ -38889,7 +38889,7 @@ var AuthorActions = {
         });
     },
 
-    addProductToShoppingCart: function (product, index) {
+    addProductToShoppingCart: function (product, index, indexSelectedCategori) {
         var newProduct = ProductsApi.saveProduct(product);
 
         //Hey dispatcher, go tell all the stores that an author was just created.
@@ -38897,8 +38897,17 @@ var AuthorActions = {
             actionType: ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART,
             addproduct: {
                 product: newProduct,
-                productindex: index
+                productindex: index,
+                categoriIndex: indexSelectedCategori
             }
+        });
+    },
+    updateSelectedCategoriIndex: function (index) {
+        //ProductsApi.removeProduct(index);
+
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_SELECTED_CATEGORI_INDEX,
+            updatedindex: index
         });
     },
 
@@ -39477,12 +39486,11 @@ var App = React.createClass({displayName: "App",
         ProductsStore.addChangeListener(this._onChange);
     },
 
-    componentDidMount: function () {
-        var items = ProductsStore.getAllProducts();
-        var _categories = _(items).pluck('category').__wrapped__;
-        this.setState({ categories: _categories });
-        this.setState({ selectedCategori: 0 });
-        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
+    componentDidMount: function () {      
+        this.setState({ categories: _(ProductsStore.getAllProducts()).pluck('category').__wrapped__ });
+        var index = ProductsStore.getSelectedCategoriIndex();
+        this.setState({ selectedCategoriIndex: index });
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
     },
 
     componentWillUnmount: function () {
@@ -39490,13 +39498,14 @@ var App = React.createClass({displayName: "App",
     },
 
     _onChange: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });
+        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });
+        //this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[selectedCategoriIndex] });
     },
 
-    _buyProduct: function (index) {
-        var products = ProductsStore.getAllProducts();
+    _buyProduct: function (index) {      
+        var products = _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[this.state.selectedCategoriIndex]
         var product = products[index];
-        ProductsAction.addProductToShoppingCart(product, index);
+        ProductsAction.addProductToShoppingCart(product, index, this.state.selectedCategoriIndex);
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -39508,8 +39517,8 @@ var App = React.createClass({displayName: "App",
         this.setState({ products: updatedList });
     },
 
-    _selectedCategory: function (index) {      
-        this.setState({ selectedCategori: index });
+    _selectedCategory: function (index) {
+        ProductsAction.updateSelectedCategoriIndex(index);
         this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
     },
 
@@ -39752,7 +39761,8 @@ module.exports = keyMirror({
     INITIALIZE: null,
     GET_PRODUCTS_FROM_SHOPPINGCART: null,
     ADD_PRODUCT_TO_SHOPPINGCART: null,
-    REMOVE_PRODUCT_FROM_SHOPPINGCART: null
+    REMOVE_PRODUCT_FROM_SHOPPINGCART: null,
+    UPDATE_SELECTED_CATEGORI_INDEX: null
 });
 
 },{"react/lib/keyMirror":190}],223:[function(require,module,exports){
@@ -39820,6 +39830,7 @@ var CHANGE_EVENT = 'change';
 
 var _products = [];
 var _productsInShoppingCart = [];
+var _selectedCategoriIndex = 0;
 
 var ProductsStore = assign({}, EventEmitter.prototype, {
 	addChangeListener: function (callback) {
@@ -39837,6 +39848,9 @@ var ProductsStore = assign({}, EventEmitter.prototype, {
 	getAllProducts: function () {
 		return _products;
 	},
+	getSelectedCategoriIndex: function () {
+		return _selectedCategoriIndex;
+	},
 
 	getProductById: function (id) {
 		return _.find(_products, { id: id });
@@ -39853,6 +39867,10 @@ Dispatcher.register(function (action) {
 			_products = action.initialData.products;
 			ProductsStore.emitChange();
 			break;
+		case ActionTypes.UPDATE_SELECTED_CATEGORI_INDEX:
+			_selectedCategoriIndex = action.updatedindex;
+			ProductsStore.emitChange();
+			break;
 		case ActionTypes.GET_PRODUCTS_FROM_SHOPPINGCART:
 			_productsInShoppingCart.push(action.products);
 			ProductsStore.emitChange();
@@ -39860,12 +39878,10 @@ Dispatcher.register(function (action) {
 		case ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART:
 			var product = action.addproduct.product;
 			var index = action.addproduct.productindex;
-
 			_productsInShoppingCart.push(product);
-
+			var items = _(_products).pluck('items').__wrapped__[_selectedCategoriIndex];
 			product.total = product.total - 1;
-			_products.splice(index, 1, product);
-
+			items.splice(index, 1, product);
 			ProductsStore.emitChange();
 			break;
 		case ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART:

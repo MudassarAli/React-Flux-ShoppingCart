@@ -26,12 +26,11 @@ var App = React.createClass({
         ProductsStore.addChangeListener(this._onChange);
     },
 
-    componentDidMount: function () {
-        var items = ProductsStore.getAllProducts();
-        var _categories = _(items).pluck('category').__wrapped__;
-        this.setState({ categories: _categories });
-        this.setState({ selectedCategori: 0 });
-        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[0] });
+    componentDidMount: function () {      
+        this.setState({ categories: _(ProductsStore.getAllProducts()).pluck('category').__wrapped__ });
+        var index = ProductsStore.getSelectedCategoriIndex();
+        this.setState({ selectedCategoriIndex: index });
+        this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
     },
 
     componentWillUnmount: function () {
@@ -39,13 +38,14 @@ var App = React.createClass({
     },
 
     _onChange: function () {
-        this.setState({ products: ProductsStore.getAllProducts() });
+        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });
+        //this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[selectedCategoriIndex] });
     },
 
-    _buyProduct: function (index) {
-        var products = ProductsStore.getAllProducts();
+    _buyProduct: function (index) {      
+        var products = _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[this.state.selectedCategoriIndex]
         var product = products[index];
-        ProductsAction.addProductToShoppingCart(product, index);
+        ProductsAction.addProductToShoppingCart(product, index, this.state.selectedCategoriIndex);
         toastr.success('Product added to shopping cart', 'Success');
     },
 
@@ -57,8 +57,8 @@ var App = React.createClass({
         this.setState({ products: updatedList });
     },
 
-    _selectedCategory: function (index) {      
-        this.setState({ selectedCategori: index });
+    _selectedCategory: function (index) {
+        ProductsAction.updateSelectedCategoriIndex(index);
         this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[index] });
     },
 

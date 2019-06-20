@@ -9,6 +9,7 @@ var CHANGE_EVENT = 'change';
 
 var _products = [];
 var _productsInShoppingCart = [];
+var _selectedCategoriIndex = 0;
 
 var ProductsStore = assign({}, EventEmitter.prototype, {
 	addChangeListener: function (callback) {
@@ -26,6 +27,9 @@ var ProductsStore = assign({}, EventEmitter.prototype, {
 	getAllProducts: function () {
 		return _products;
 	},
+	getSelectedCategoriIndex: function () {
+		return _selectedCategoriIndex;
+	},
 
 	getProductById: function (id) {
 		return _.find(_products, { id: id });
@@ -42,6 +46,10 @@ Dispatcher.register(function (action) {
 			_products = action.initialData.products;
 			ProductsStore.emitChange();
 			break;
+		case ActionTypes.UPDATE_SELECTED_CATEGORI_INDEX:
+			_selectedCategoriIndex = action.updatedindex;
+			ProductsStore.emitChange();
+			break;
 		case ActionTypes.GET_PRODUCTS_FROM_SHOPPINGCART:
 			_productsInShoppingCart.push(action.products);
 			ProductsStore.emitChange();
@@ -49,12 +57,10 @@ Dispatcher.register(function (action) {
 		case ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART:
 			var product = action.addproduct.product;
 			var index = action.addproduct.productindex;
-
 			_productsInShoppingCart.push(product);
-
+			var items = _(_products).pluck('items').__wrapped__[_selectedCategoriIndex];
 			product.total = product.total - 1;
-			_products.splice(index, 1, product);
-
+			items.splice(index, 1, product);
 			ProductsStore.emitChange();
 			break;
 		case ActionTypes.REMOVE_PRODUCT_FROM_SHOPPINGCART:

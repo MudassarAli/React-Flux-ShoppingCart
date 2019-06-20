@@ -13,7 +13,7 @@ var AuthorActions = {
         });
     },
 
-    addProductToShoppingCart: function (product, index) {
+    addProductToShoppingCart: function (product, index, indexSelectedCategori) {
         var newProduct = ProductsApi.saveProduct(product);
 
         //Hey dispatcher, go tell all the stores that an author was just created.
@@ -21,8 +21,17 @@ var AuthorActions = {
             actionType: ActionTypes.ADD_PRODUCT_TO_SHOPPINGCART,
             addproduct: {
                 product: newProduct,
-                productindex: index
+                productindex: index,
+                categoriIndex: indexSelectedCategori
             }
+        });
+    },
+    updateSelectedCategoriIndex: function (index) {
+        //ProductsApi.removeProduct(index);
+
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_SELECTED_CATEGORI_INDEX,
+            updatedindex: index
         });
     },
 
