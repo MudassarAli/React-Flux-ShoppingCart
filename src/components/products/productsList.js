@@ -38,8 +38,7 @@ var App = React.createClass({
     },
 
     _onChange: function () {
-        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });
-        //this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[selectedCategoriIndex] });
+        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });        
     },
 
     _buyProduct: function (index) {      
@@ -50,11 +49,17 @@ var App = React.createClass({
     },
 
     _searchProducts: function (value) {
-        var updatedList = this.state.products;
-        updatedList = updatedList.filter(function (item) {
-            return item.name.indexOf(value) !== -1;
+        console.log(value);
+        if(value == "") {              
+            ProductsAction.updateSelectedCategoriIndex(this.state.selectedCategoriIndex); 
+            this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[this.state.selectedCategoriIndex] });
+        }
+
+        var products = this.state.products;
+        products = products.filter(function (item) {
+            return item.name.toLowerCase().indexOf(value.toLowerCase()) !== -1;
         });
-        this.setState({ products: updatedList });
+        this.setState({ products: products });
     },
 
     _selectedCategory: function (index) {

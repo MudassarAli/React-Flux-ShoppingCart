@@ -39263,7 +39263,6 @@ module.exports = App;
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-var ProductActions = require('../../actions/productsActions');
 var ProductsStore = require("../../stores/productsStore");
 
 var Header = React.createClass({displayName: "Header",
@@ -39275,7 +39274,7 @@ var Header = React.createClass({displayName: "Header",
 
   componentWillMount: function () {
     ProductsStore.addChangeListener(this._onChange);
-  },  
+  },
 
   //Clean up when this component is unmounted
   componentWillUnmount: function () {
@@ -39291,35 +39290,35 @@ var Header = React.createClass({displayName: "Header",
     var styles = {
       height: "30px",
       width: "70px"
-    }
+    }   
 
-    return (
+    return(
       React.createElement("div", {className: "container"}, 
-        React.createElement("nav", {className: "navbar navbar-default"}, 
-          React.createElement("div", {className: "container-fluid"}, 
-            React.createElement(Link, {to: "app", className: "navbar-brand"}, 
-              React.createElement("img", {style: styles, src: "images/Contoso_logo.png"})
-            ), 
-            React.createElement("ul", {className: "nav navbar-nav"}, 
-              React.createElement("li", null, React.createElement(Link, {to: "app"}, "Home")), 
-              React.createElement("li", null, React.createElement(Link, {to: "productslist"}, "products")), 
-              React.createElement("li", null, React.createElement(Link, {to: "about"}, "About")), 
-              React.createElement("li", null, React.createElement(Link, {to: "shoppingcart"}, 
-                React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}, 
-                  this.state._productsInShoppingCart.length
-                )
+      React.createElement("nav", {className: "navbar navbar-default"}, 
+        React.createElement("div", {className: "container-fluid"}, 
+          React.createElement(Link, {to: "app", className: "navbar-brand"}, 
+            React.createElement("img", {style: styles, src: "images/Contoso_logo.png"})
+          ), 
+          React.createElement("ul", {className: "nav navbar-nav"}, 
+            React.createElement("li", null, React.createElement(Link, {to: "app"}, "Home")), 
+            React.createElement("li", null, React.createElement(Link, {to: "productslist"}, "products")), 
+            React.createElement("li", null, React.createElement(Link, {to: "about"}, "About")), 
+            React.createElement("li", null, React.createElement(Link, {to: "shoppingcart"}, 
+              React.createElement("span", {className: "glyphicon glyphicon-shopping-cart"}, 
+                this.state._productsInShoppingCart.length
               )
-              )
+            )
             )
           )
         )
+      )
       )
     );
   }
 });
 
 module.exports = Header;
-},{"../../actions/productsActions":209,"../../stores/productsStore":226,"react":205,"react-router":35}],216:[function(require,module,exports){
+},{"../../stores/productsStore":226,"react":205,"react-router":35}],216:[function(require,module,exports){
 'use strict';
 var React = require('react');
 var Router = require('react-router');
@@ -39498,8 +39497,7 @@ var App = React.createClass({displayName: "App",
     },
 
     _onChange: function () {
-        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });
-        //this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[selectedCategoriIndex] });
+        this.setState({ selectedCategoriIndex: ProductsStore.getSelectedCategoriIndex() });        
     },
 
     _buyProduct: function (index) {      
@@ -39510,11 +39508,17 @@ var App = React.createClass({displayName: "App",
     },
 
     _searchProducts: function (value) {
-        var updatedList = this.state.products;
-        updatedList = updatedList.filter(function (item) {
-            return item.name.indexOf(value) !== -1;
+        console.log(value);
+        if(value == "") {              
+            ProductsAction.updateSelectedCategoriIndex(this.state.selectedCategoriIndex); 
+            this.setState({ products: _(ProductsStore.getAllProducts()).pluck('items').__wrapped__[this.state.selectedCategoriIndex] });
+        }
+
+        var products = this.state.products;
+        products = products.filter(function (item) {
+            return item.name.toLowerCase().indexOf(value.toLowerCase()) !== -1;
         });
-        this.setState({ products: updatedList });
+        this.setState({ products: products });
     },
 
     _selectedCategory: function (index) {
@@ -39562,7 +39566,7 @@ var React = require('react');
 var Search = React.createClass({displayName: "Search",
 
     getInitialState: function () {
-        return null;        
+        return null;
     },
 
     _onChange: function (e) {
@@ -39570,26 +39574,11 @@ var Search = React.createClass({displayName: "Search",
         this.props.searchProducts((e.target).value);
     },
 
-
     render: function () {
         return (
-            React.createElement("div", {className: "container"}, 
-                React.createElement("br", null), 
-                React.createElement("div", {className: "row justify-content-center"}, 
-                    React.createElement("div", {className: "col-12 col-md-10 col-lg-8"}, 
-                        React.createElement("form", {className: "card card-sm"}, 
-                            React.createElement("div", {className: "card-body row no-gutters align-items-center"}, 
-                                React.createElement("div", {className: "col-auto"}, 
-                                    React.createElement("i", {className: "fas fa-search h4 text-body"})
-                                ), 
-
-                                React.createElement("div", {className: "col"}, 
-                                    React.createElement("input", {className: "form-control form-control-lg form-control-borderless", 
-                                        type: "search", placeholder: "Search", onChange: this._onChange})
-                                )
-                            )
-                        )
-                    )
+            React.createElement("div", null, 
+                React.createElement("form", null, 
+                    React.createElement("input", {className: "form-control", type: "search", placeholder: "Search", onChange: this._onChange})
                 )
             )
         );
@@ -39888,10 +39877,8 @@ Dispatcher.register(function (action) {
 			var prodcstindex = action.remove.productindex;
 			var producttoremove = action.remove.product;
 			_productsInShoppingCart.splice(prodcstindex, 1);
-
-			var prodObject = _products.find(function (obj) { return obj.name === producttoremove.name; });
+			var prodObject = _(_products).pluck('items').__wrapped__[_selectedCategoriIndex].find(function (obj) { return obj.name === producttoremove.name; });
 			prodObject.total = prodObject.total + 1;
-
 			ProductsStore.emitChange();
 			break;
 		default:

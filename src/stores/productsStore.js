@@ -67,10 +67,8 @@ Dispatcher.register(function (action) {
 			var prodcstindex = action.remove.productindex;
 			var producttoremove = action.remove.product;
 			_productsInShoppingCart.splice(prodcstindex, 1);
-
-			var prodObject = _products.find(function (obj) { return obj.name === producttoremove.name; });
+			var prodObject = _(_products).pluck('items').__wrapped__[_selectedCategoriIndex].find(function (obj) { return obj.name === producttoremove.name; });
 			prodObject.total = prodObject.total + 1;
-
 			ProductsStore.emitChange();
 			break;
 		default:
